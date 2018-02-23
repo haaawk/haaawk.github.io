@@ -1,14 +1,12 @@
-title:             Clean Blog
-email:             your-email@example.com
-description:       A Blog Theme by Start Bootstrap
-author:            Start Bootstrap
+title:             Developer's notebook
+email:             haaawk@gmail.com
+description:       Notes from my everyday work
+author:            Piotr Jastrzębski
 baseurl:           ""
 url:               "http://haaawk.github.io"
 
 # Social Profiles
-twitter_username:  SBootstrap
-github_username:   BlackrockDigital
-facebook_username: StartBootstrap
+github_username:   haaawk
 
 # Build settings
 markdown:          kramdown
