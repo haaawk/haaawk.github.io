@@ -63,12 +63,12 @@ date:   2018-02-26 10:30:25 +0100
     </tr>
   </table>
   <br>
-  Number of bytes required to encode an integer depends on number of leading zeros in the binary representation of this integer.
-  When there are Z leading zeros in the representation then only B = 64 - Z bits have to be encoded because leading zeros can be deduced from that.
-  Encoding requires B / 7 bytes to represent B bits because only 7 bits per byte are used for actual data and one bit is a control bit used by encoding.
-  Protocol Buffers Base 128 Variants distributes control bits equaly across all bytes by using most significant bit of each byte as a control bit.
-  SSTable format cumulates control bits in the first byte.
-  This means that the representation always starts with (B/7) - 1 bits set to 1.
-  Then there is a bit set to 0 followed by B bits of the actual data.
-  This trick makes it possible to determine the length of the representation after reading only the first byte.
+    Number of bytes required to encode an integer depends on number of leading zeros in the binary representation of this integer.
+    When there are Z leading zeros in the representation then only B = 64 - Z bits have to be encoded because leading zeros can be deduced from that.
+    Encoding requires B / 7 bytes to represent B bits because only 7 bits per byte are used for actual data and one bit is a control bit used by encoding.
+    Protocol Buffers Base 128 Variants distributes control bits equaly across all bytes by using most significant bit of each byte as a control bit.
+    SSTable format cumulates control bits in the first byte.
+    This means that the representation always starts with (B/7) - 1 bits set to 1.
+    Then there is a bit set to 0 followed by B bits of the actual data.
+    This trick makes it possible to determine the length of the representation after reading only the first byte.
 </p>
