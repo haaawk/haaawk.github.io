@@ -9,7 +9,7 @@ date:   2018-02-26 10:30:25 +0100
     text-align: justify;
   }
 </style>
-<h3><b>IMPORTANT NOTE: This post describes SSTable format mc (3.0.8, 3.9). There are multiple versions of the format which can differ significantly.</b></h3>
+<h3><b>IMPORTANT NOTE: This post describes SSTable format mc (3.0.8, 3.9). There are multiple versions of SSTable format which can differ significantly.</b></h3>
 <p>
   SSTable format uses a concept of variant integers borrowed from <a href="https://developers.google.com/protocol-buffers/docs/encoding#varints">Protocol Buffers Base 128 Variants</a>.
   Those encodings aren't exactly the same but they share the idea that an integer does not have to be represented by a fixed number of bytes.
@@ -105,6 +105,6 @@ date:   2018-02-26 10:30:25 +0100
 </p>
 <h1>Links</h1>
 <ul>
-  <li>Protocol Buffers Base 128 Variants:<br> <a href="https://developers.google.com/protocol-buffers/docs/encoding#varints">https://developers.google.com/protocol-buffers/docs/encoding#varints</a></li>
-  <li>Cassandra source code:<br> <a href="https://github.com/apache/cassandra/blob/cassandra-3.11.1/src/java/org/apache/cassandra/utils/vint/VIntCoding.java">https://github.com/apache/cassandra/blob/cassandra-3.11.1/src/java/org/apache/cassandra/utils/vint/VIntCoding.java</a></li>
+  <li>Protocol Buffers Base 128 Variants:<br> <span><a href="https://developers.google.com/protocol-buffers/docs/encoding#varints">https://developers.google.com/protocol-buffers/docs/encoding#varints</a></span></li>
+  <li>Cassandra source code:<br> <span><a href="https://github.com/apache/cassandra/blob/cassandra-3.11.1/src/java/org/apache/cassandra/utils/vint/VIntCoding.java">https://github.com/apache/cassandra/blob/cassandra-3.11.1/src/java/org/apache/cassandra/utils/vint/VIntCoding.java</a></span></li>
 </ul>
