@@ -6,8 +6,8 @@ date:   2018-02-26 10:30:25 +0100
 ---
 
 <p>
-  SSTable format uses a concept of variant integers borrowed from [Protocol Buffers Bas 128 Variants] (https://developers.google.com/protocol-buffers/docs/encoding#varints).
-  Encoding isn't exactly the same but it shares the idea that a number does not have to be represented by a fixed number of bytes.
+  SSTable format uses a concept of variant integers borrowed from <a href="https://developers.google.com/protocol-buffers/docs/encoding#varints">Protocol Buffers Base 128 Variants</a>.
+  Encoding isn't exactly the same but it shares the idea that an integer does not have to be represented by a fixed number of bytes.
   In SSTables, a variant integer can be represented by 1-9 bytes.
   The length of the representation is encoded in the first byte.
 </p>
