@@ -8,6 +8,54 @@ date:   2018-02-26 10:30:25 +0100
 <p>
   SSTable format uses a concept of variant integers borrowed from <a href="https://developers.google.com/protocol-buffers/docs/encoding#varints">Protocol Buffers Base 128 Variants</a>.
   Encoding isn't exactly the same but it shares the idea that an integer does not have to be represented by a fixed number of bytes.
-  In SSTables, a variant integer can be represented by 1-9 bytes.
-  The length of the representation is encoded in the first byte.
+  In SSTables, a variant integer can be represented by 1-9 bytes and the length is encoded in the first byte.
+  Important characteristic of such representation is that it uses less bytes for small numbers and more bytes for large numbers than a fixed length representation.
+  Both signed and unsigned 64-bit numbers can be translated to bytes using this encoding.
+  Let's investigate unsigned numbers first.
+</p>
+<h1>Unsigned number encoding</h1>
+<p>
+  Table below presents the number of bytes used to represent integers from different ranges.
+  <table>
+    <th>
+      <td>Range</td>
+      <td>Length of byte representation</td>
+    </th>
+    <tr>
+      <td>0 - 127 (2^7 - 1)</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>128 (2^7) - 32767 (2^15 - 1)</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>32768 (2^15) - 4194303 (2^22 - 12</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>4194304 (2^22) - 536870911 (2^29 - 1)</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>536870912 (2^29) - 68719476735 (2^36 - 1)</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>68719476736 (2^36) - 8796093022207 (2^43 - 1)</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>8796093022208 (2^43) - 1125899906842623 (2^50 - 1)</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>1125899906842624 (2^50) - 144115188075855871 (2^57 - 1)</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>144115188075855872 (2^57) - 18446744073709551615(2^64 - 1)</td>
+      <td>9</td>
+    </tr>
+  </table>
 </p>
