@@ -4,7 +4,11 @@ title:  "ScyllaDB/Cassandra SSTable format"
 subtitle: "Variant integers encoding"
 date:   2018-02-26 10:30:25 +0100
 ---
-
+<style>
+  p {
+    align: justify;
+  }
+</style>
 <p>
   SSTable format uses a concept of variant integers borrowed from <a href="https://developers.google.com/protocol-buffers/docs/encoding#varints">Protocol Buffers Base 128 Variants</a>.
   Encoding isn't exactly the same but it shares the idea that an integer does not have to be represented by a fixed number of bytes.
@@ -66,4 +70,5 @@ date:   2018-02-26 10:30:25 +0100
   SSTable format cumulates control bits in the first byte.
   This means that the representation always starts with (B/7) - 1 bits set to 1.
   Then there is a bit set to 0 followed by B bits of the actual data.
+  This trick makes it possible to determine the length of the representation after reading only the first byte.
 </p>
