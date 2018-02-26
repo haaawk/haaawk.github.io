@@ -11,7 +11,7 @@ date:   2018-02-26 10:30:25 +0100
 </style>
 <p>
   SSTable format uses a concept of variant integers borrowed from <a href="https://developers.google.com/protocol-buffers/docs/encoding#varints">Protocol Buffers Base 128 Variants</a>.
-  Encoding isn't exactly the same but it shares the idea that an integer does not have to be represented by a fixed number of bytes.
+  Those encodings aren't exactly the same but they share the idea that an integer does not have to be represented by a fixed number of bytes.
   In SSTables, a variant integer can be represented by 1-9 bytes and the length is encoded in the first byte.
   Important characteristic of such representation is that it uses less bytes for small numbers and more bytes for large numbers than a fixed length representation.
   Both signed and unsigned 64-bit numbers can be translated to bytes using this encoding.
@@ -64,12 +64,31 @@ date:   2018-02-26 10:30:25 +0100
   </tr>
 </table>
 <p>
-  Number of bytes required to encode an integer depends on number of leading zeros in the binary representation of this integer.
-  When there are Z leading zeros in the representation then only B = 64 - Z bits have to be encoded because leading zeros can be deduced from that.
-  Encoding requires B / 7 bytes to represent B bits because only 7 bits per byte are used for actual data and one bit is a control bit used by encoding.
-  Protocol Buffers Base 128 Variants distributes control bits equaly across all bytes by using most significant bit of each byte as a control bit.
-  SSTable format cumulates control bits in the first byte.
-  This means that the representation always starts with (B/7) - 1 bits set to 1.
-  Then there is a bit set to 0 followed by B bits of the actual data.
-  This trick makes it possible to determine the length of the representation after reading only the first byte.
+  There are 3 cases we should look at:
+  <ol>
+    <li>Numbers that require single byte representation</li>
+    <li>Numbers that require 9 bytes representation</li>
+    <li>Numbers that require 2-8 bytes representation</li>
+  </ol>
+</p>
+<h2>Single byte representation</h2>
+<p>
+  Small numbers, such that are smaller than 2^8, can be represented by a single byte.
+  The representation of such number is it's lowest byte.
+  All the leading bytes are assumed to be 0x00.
+  Such representation can be recognized because it has the most significant bit equal to 0.
+  All multi byte representations have most significant bit of the first byte set to 1.
+</p>
+<h2>9 bytes representation</h2>
+<p>
+  Big numbers, such that are bigger than 2^57 - 1, are represented using 9 bytes.
+  First byte is 0xFF and the following 8 bytes represent the whole 64-bit number.
+</p>
+<h2>2-8 bytes representation</h2>
+<p>
+  It takes 2 to 8 byte to represent numbers that are bigger than 2^8-1 and smaller than 2^57.
+  First byte starts with as many leading bits set to one as there are bytes following it in the representation.
+  Then there is zero separating those leading ones and the actual data.
+  All remaining bits together with the following bytes form the actual number.
+  Those bits should be padded with leading zeros.
 </p>
