@@ -92,5 +92,13 @@ date:   2018-02-26 10:30:25 +0100
   All remaining bits together with the following bytes form the actual number.
   Those bits should be padded with leading zeros.
   This diagram presents an example of encoded and decoded version of a number.
+  <br>
   <img src="/img/sstables-variant-integers-1.png">
+</p>
+<h1>Signed number encoding</h1>
+<p>
+  Signed numbers are encoded using a ZigZag encoding and then are treated with the procedure described above.
+  Without this additional step, it would always take 9 bytes to represent a negative number.
+  ZigZag encoding transforms a signed number N into unsigned (N << 1) ^ (N >> 63).
+  To recover the initial number from encoded version M (which is unsigned) we need to calculate (M >> 1) ^ -(M & 1).
 </p>
