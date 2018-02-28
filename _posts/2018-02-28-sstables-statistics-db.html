@@ -66,5 +66,11 @@ date:   2018-02-28 15:30:25 +0100
   Next 8 bytes are a double that describes the probability of false positive matches in the bloom filter for this SSTable.
 </p>
 <h1>Compaction metadata entry</h1>
+<p>
+  This entry contains a serialized <a href="http://static.googleusercontent.com/external_content/untrusted_dlcp/research.google.com/en/us/pubs/archive/40671.pdf">HyperLogLogPlus</a> which can be used to estimate the number of partition keys in the SSTable.
+  If this is not present then the same estimation can be computed using Summary file.
+  First 4 bytes represent a signed integer that is a length L of the serialized form of HyperLogLogPlus.
+  Then there are exactly L bytes describing the HyperLogLogPlus.
+</p>
 <h1>Statistics entry</h1>
 <h1>Serialization header entry</h1>
