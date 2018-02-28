@@ -74,7 +74,7 @@ date:   2018-02-28 15:30:25 +0100
 </p>
 <h1>Statistics entry</h1>
 <p>
-  This entry contains some parts of EstimatedHistogram and StreamingHistogram types.
+  This entry contains some parts of EstimatedHistogram, StreamingHistogram and CommitLogPosition types.
   Let's have a look at them first.
 </p>
 <h2>EstimatedHistogram</h2>
@@ -95,5 +95,33 @@ date:   2018-02-28 15:30:25 +0100
   Each takes 8 bytes.
   Double is an offset of the bucket and long is its value.
 </p>
+<h2>CommitLogPosition</h2>
+<p>
+  <a href="https://github.com/apache/cassandra/blob/cassandra-3.11.1/src/java/org/apache/cassandra/db/commitlog/CommitLogPosition.java">CommitLogPosition</a> consists of a signed long and signed integer.
+  The long represents a segmentId while the integer is a position inside that segment.
+</p>
 <h2>Whole entry</h2>
+<p>
+  The entry starts with an EstimatedHistogram of partition sizes.
+  Then it has an EstimatedHistogram of column counts.
+  Next is CommitLogPosition for upper bound of commit log.
+  This is followed by 2 signed longs (8 bytes each) that represent min and max timepstamp in the SSTable.
+  Next are 2 signed integers (4 bytes each) that represent min and max local deletion time in the SSTable.
+  Then there are two signed integers (4 bytes each) that describe min and max TTL in the SSTable.
+  Next is a double (8 bytes) that stores a compression ration of the SSTable.
+  This is followed by a StreamingHistogarm of tombstones in the SSTable.
+  Then the entry has a signed integer (4 bytes) that stores the level of the SSTable (used probably for leveled compaction).
+  Next is a signed long (8 bytes) that represents the time the SSTable was repaired.
+  This is followed by min and max clustering keys.
+  Each is encoded with the signed integer (4 bytes) that describes the number of key blocks and the blocks itself.
+  A clustering key block is encoded using unsigned short length L (2 bytes) and L bytes that follow it.
+  Then there is a boolean (1 byte) that determins whether the SSTable contains legacy counters.
+  Next are total numbers of columns and rows (8 bytes signed long each).
+  Version MA of SSTable 3.x format ends here and it contains only one commit log position interval - [NONE = new CommitLogPosition(-1, 0), upper bound of commit log].
+  In other versions there's a CommitLogPosition here that represents lower bound of a commit log.
+  Version MB of SSTable 3.x format ends here and it contains only one commit log position interval - [lower bound of commit log, upper bound of commit log].
+  In other versions there's a set of commit log positions intervals serialized here.
+  The set starts with a signed integer (4 bytes) that represents the number of intervals.
+  Each interval is a pair of CommitLogPositions.
+</p>
 <h1>Serialization header entry</h1>
