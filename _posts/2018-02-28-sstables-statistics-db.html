@@ -125,3 +125,174 @@ date:   2018-02-28 15:30:25 +0100
   Each interval is a pair of CommitLogPositions.
 </p>
 <h1>Serialization header entry</h1>
+<p>
+  This entry starts with unsigned variant integer that represents min timestamp (64-bit).
+  Then it has an unsigned variant integer that represents min local deletion time (32-bit).
+  Next is unsigned variant integer for min TTL (32-bit).
+  This is followed by a type of partition key.
+  Then the entry has unsigned variant integer that is length of clustering key CL (32-bit).
+  Next there are CL types of clustering key components.
+  Then there are static columns with their types and regular columns with their types.
+</p>
+<h2>Columns encoding</h2>
+<p>
+  Both static and regular columns are encoded in the same way.
+  First there's an unsigned variant integer (32-bit) that is a number of columns.
+  Then for each column there's a byte buffer with a unsigned variant integer (32-bit) length, which is column name, and type of this column.
+</p>
+<h2>Type encoding</h2>
+<p>
+  Type is just a byte buffer with an unsigned variant integer (32-bit) length.
+  It is a UTF-8 string.
+  All leading spaces, tabs and newlines are skipped.
+  Null or empty string is a bytes type.
+  First segment of non-blank characters should contain only alphanumerical characters and special chars like '-', '+', '.', '_', '&'.
+  This is the name of the type.
+  If type name does not contain any '.' then it gets "org.apache.cassandra.db.marshal." prepended to itself.
+  Then an "instance" static field is taken from this class.
+  If the first non-blank character that follows type name is '(' then "getInstance" static method is invoked instead.
+  Remaining string is passed to this method as a parameter.
+  There are following types:
+</p>
+<table>
+  <tr>
+    <th>Type</th>
+    <th>Parametrized</th>
+  </tr>
+  <tr>
+    <td>Ascii Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Boolean Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Bytes Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Byte Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>ColumnToCollection Type</td>
+    <td align="center">Yes</td>
+  </tr>
+  <tr>
+    <td>Composite Type</td>
+    <td align="center">Yes</td>
+  </tr>
+  <tr>
+    <td>CounterColumn Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Date Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Decimal Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Double Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Duration Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>DynamicComposite Type</td>
+    <td align="center">Yes</td>
+  </tr>
+  <tr>
+    <td>Empty Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Float Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Frozen Type</td>
+    <td align="center">Yes</td>
+  </tr>
+  <tr>
+    <td>InetAddress Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Int32 Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Integer Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>LexicalUUID Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>List Type</td>
+    <td align="center">Yes</td>
+  </tr>
+  <tr>
+    <td>Long Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Map Type</td>
+    <td align="center">Yes</td>
+  </tr>
+  <tr>
+    <td>PartitionerDefinedOrder</td>
+    <td align="center">Yes</td>
+  </tr>
+  <tr>
+    <td>Reversed Type</td>
+    <td align="center">Yes</td>
+  </tr>
+  <tr>
+    <td>Set Type</td>
+    <td align="center">Yes</td>
+  </tr>
+  <tr>
+    <td>Short Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>SimpleDate Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Timestamp Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Time Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>TimeUUID Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>Tuple Type</td>
+    <td align="center">Yes</td>
+  </tr>
+  <tr>
+    <td>User Type</td>
+    <td align="center">Yes</td>
+  </tr>
+  <tr>
+    <td>UTF8 Type</td>
+    <td align="center">No</td>
+  </tr>
+  <tr>
+    <td>UUID Type</td>
+    <td align="center">No</td>
+  </tr>
+</table>
